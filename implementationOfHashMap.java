@@ -16,14 +16,14 @@ public class implementationOfHashMap {
             }
         }
             private int n; //to get no. entries in map
-            private LinkedList<Node>[] buckets;
+            private LinkedList<Node>[] box;
             public MyHashMap(){
-                initBuckets(DEFAULT_CAPACITY);
+                initBox(DEFAULT_CAPACITY);
             }
-            private void initBuckets(int N){
-                buckets=new  LinkedList[N];
-                for(int i=0; i< buckets.length; i++){
-                    buckets[i]=new LinkedList<>();
+            private void initBox(int N){
+                box=new  LinkedList[N];
+                for(int i=0; i< box.length; i++){
+                    box[i]=new LinkedList<>();
 
                 }
             }
@@ -35,34 +35,34 @@ public class implementationOfHashMap {
                 }
                 return -1;
             }
-            private int HashFunc(K key){
+            private int HashFunction(K key){
                 int hc=key.hashCode();
-                return (Math.abs(hc))% buckets.length;
+                return (Math.abs(hc))% box.length;
             }
 
             public int size(){
                 return n;
             }
             public int capacity(){
-                return buckets.length;
+                return box.length;
             }
             public float load(){
-                return (n*1.0f)/buckets.length;
+                return (n*1.0f)/box.length;
             }
 
             private void rehash(){
-                LinkedList<Node>[] oldBuckets= buckets;
-                initBuckets(oldBuckets.length*2);
+                LinkedList<Node>[] oldBox= box;
+                initBox(oldBox.length*2);
                 n=0;
-                for(var bucket:oldBuckets){
+                for(var bucket:oldBox){
                     for(var node: bucket){
                         put(node.key, node.value);
                     }
                 }
             }
             public void put(K key, V value){
-                int bi=HashFunc(key);
-                LinkedList<Node> currBucket= buckets[bi];
+                int bi=HashFunction(key);
+                LinkedList<Node> currBucket= box[bi];
                 int ei= searchInBucket(currBucket, key);
                 if(ei==-1){
                     Node node = new Node(key, value);
@@ -73,16 +73,16 @@ public class implementationOfHashMap {
                     Node currNode= currBucket.get(ei);
                     currNode.value=value;
                 }
-                if(n>= buckets.length*DEFAULT_LOAD_FACTOR){
+                if(n>= box.length*DEFAULT_LOAD_FACTOR){
                     rehash();
                 }
             }
             public V get(K key){
-                int bi= HashFunc(key);
-                LinkedList<Node> currBucket= buckets[bi];
-                int ei= searchInBucket(currBucket, key);
+                int bi= HashFunction(key);
+                LinkedList<Node> currBox= box[bi];
+                int ei= searchInBucket(currBox, key);
                 if(ei!=-1){// present
-                    Node currNode = currBucket.get(ei);
+                    Node currNode = currBox.get(ei);
                     return currNode.value;
                 }
                 else{
@@ -90,13 +90,13 @@ public class implementationOfHashMap {
                 }
             }
             public V remove(K key){
-                int bi= HashFunc(key);
-                LinkedList<Node> currBucket= buckets[bi];
-                int ei= searchInBucket(currBucket, key);
+                int bi= HashFunction(key);
+                LinkedList<Node> currBox= box[bi];
+                int ei= searchInBucket(currBox, key);
                 if(ei!=-1){
-                    Node currNode= currBucket.get(ei);
+                    Node currNode= currBox.get(ei);
                     V val= currNode.value;
-                    currBucket.remove(ei);
+                    currBox.remove(ei);
                     n--;
                     return val;
                 }
